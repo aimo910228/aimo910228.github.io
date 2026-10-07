@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="description" content="愛默的線上小工具：把 AI 產生文字中的半形標點轉成全形中文標點，並保留時間格式。">
+  <title>文字小工具｜愛默的工具箱</title>
+  <style>
+    :root { color-scheme: light; --ink:#20241f; --muted:#777d73; --line:#e5e5dd; --paper:#fff; --bg:#f6f5f1; --green:#315d4b; --green-soft:#eaf1ec; --gold:#c29a59; }
+    * { box-sizing:border-box }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif; line-height:1.65; }
+    main { width:min(100% - 32px, 980px); margin:0 auto; padding:48px 0 64px; }
+    header { margin-bottom:30px; }
+    .eyebrow { color:var(--green); font-size:.78rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    h1 { margin:8px 0 8px; font-size:clamp(2rem,5vw,3rem); line-height:1.2; letter-spacing:-.04em; }
+    .intro { margin:0; color:var(--muted); max-width:640px; }
+    .tool-card { background:var(--paper); border:1px solid var(--line); border-radius:20px; padding:clamp(18px,4vw,32px); box-shadow:0 12px 36px #25372c0a; }
+    .tool-title { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:20px; }
+    h2 { margin:0; font-size:1.25rem; }
+    .badge { flex:none; border-radius:999px; background:var(--green-soft); color:var(--green); font-size:.75rem; font-weight:700; padding:5px 11px; }
+    .mapping { color:var(--muted); font-size:.9rem; margin:5px 0 0; }
+    .mapping code { color:var(--green); font-family:inherit; font-weight:700; }
+    .field-label { display:flex; justify-content:space-between; gap:10px; margin:0 0 8px; font-size:.9rem; font-weight:700; }
+    .count { color:var(--muted); font-size:.8rem; font-weight:400; }
+    textarea { display:block; width:100%; min-height:190px; resize:vertical; padding:15px 16px; border:1px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); font:inherit; line-height:1.75; outline:none; }
+    textarea:focus { border-color:var(--green); box-shadow:0 0 0 3px #315d4b18; }
+    textarea::placeholder { color:#a3a79f; }
+    .options { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:14px 0 18px; color:var(--muted); font-size:.88rem; }
+    .check { display:inline-flex; align-items:center; gap:9px; color:var(--ink); cursor:pointer; }
+    input[type=checkbox] { accent-color:var(--green); width:17px; height:17px; }
+    .hint { font-size:.82rem; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; margin:0 0 22px; }
+    button { border:0; border-radius:10px; padding:10px 16px; font:inherit; font-size:.9rem; font-weight:700; cursor:pointer; transition:transform .12s,background .12s; }
+    button:hover { transform:translateY(-1px); }
+    .primary { background:var(--green); color:white; }
+    .primary:hover { background:#254b3b; }
+    .secondary { background:#f0f0eb; color:var(--ink); }
+    .secondary:hover { background:#e8e8e1; }
+    .output-wrap { position:relative; }
+    #output { min-height:190px; background:#fafbf9; }
+    .copy-status { min-height:1.4em; color:var(--green); font-size:.82rem; margin:8px 0 0; }
+    .note { margin:22px 2px 0; border-left:3px solid var(--gold); padding:2px 0 2px 13px; color:var(--muted); font-size:.87rem; }
+    .more { margin-top:30px; }
+    .more h2 { font-size:1rem; margin-bottom:12px; }
+    .tool-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+    .tool-item { padding:15px 16px; border:1px dashed #d8d9d0; border-radius:13px; color:var(--muted); background:#ffffff70; }
+    .tool-item strong { display:block; color:var(--ink); font-size:.9rem; }
+    footer { margin-top:36px; color:#92968d; font-size:.78rem; }
+    @media(max-width:560px) { main { padding-top:32px; } .tool-title { display:block; } .badge { display:inline-block; margin-top:9px; } textarea { min-height:160px; } .hint { flex-basis:100%; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Aimo's little toolbox</div>
+      <h1>文字小工具</h1>
+      <p class="intro">把 AI 生成文字裡的半形標點，整理成中文常用的全形標點。貼上、轉換、複製就好。</p>
+    </header>
+
+    <section class="tool-card" aria-labelledby="punct-title">
+      <div class="tool-title">
+        <div>
+          <h2 id="punct-title">AI 文字標點轉換</h2>
+          <p class="mapping"><code>, → ，　? → ？　! → ！　; → ；　: → ：</code></p>
+        </div>
+        <span class="badge">在瀏覽器本機處理</span>
+      </div>
+
+      <label class="field-label" for="source"><span>原始文字</span><span class="count" id="source-count">0 字</span></label>
+      <textarea id="source" placeholder="把 AI 生成的文字貼在這裡……"></textarea>
+      <div class="options">
+        <label class="check"><input id="keep-time" type="checkbox" checked>保留時間格式中的半形冒號</label>
+        <span class="hint">例如 13:00 會維持原樣</span>
+      </div>
+      <div class="actions">
+        <button class="primary" id="convert" type="button">轉換標點</button>
+        <button class="secondary" id="copy" type="button">複製結果</button>
+        <button class="secondary" id="clear" type="button">清除</button>
+      </div>
+      <label class="field-label" for="output"><span>轉換結果</span><span class="count" id="output-count">0 字</span></label>
+      <div class="output-wrap">
+        <textarea id="output" readonly placeholder="轉換後的文字會出現在這裡……"></textarea>
+      </div>
+      <p class="copy-status" id="status" aria-live="polite"></p>
+      <p class="note">時間格式會保留半形冒號，例如 <strong>13:00</strong>。其他冒號會轉成全形「：」。文字只在目前瀏覽器中處理，不會上傳。</p>
+    </section>
+
+    <section class="more" aria-labelledby="more-title">
+      <h2 id="more-title">工具箱</h2>
+      <div class="tool-list">
+        <div class="tool-item"><strong>AI 文字標點轉換</strong>把半形標點整理成全形中文標點</div>
+        <div class="tool-item"><strong>更多工具，之後放這裡</strong>小工具會集中在這個頁面</div>
+      </div>
+    </section>
+    <footer>愛默的個人文字工具｜簡單、即用，不保存輸入內容。</footer>
+  </main>
+  <script>
+    const source = document.querySelector("#source");
+    const output = document.querySelector("#output");
+    const keepTime = document.querySelector("#keep-time");
+    const status = document.querySelector("#status");
+    const chars = value => [...value].length;
+    function updateCounts() {
+      document.querySelector("#source-count").textContent = chars(source.value) + " 字";
+      document.querySelector("#output-count").textContent = chars(output.value) + " 字";
+    }
+    function convertText(text) {
+      const map = { ",":"，", "?":"？", "!":"！", ";":"；", ":":"：" };
+      if (!keepTime.checked) return [...text].map(char => map[char] || char).join("");
+      const timePattern = /(\b\d{1,2}:\d{2}(?::\d{2})?\b)/g;
+      return text.split(timePattern).map((part, index) => {
+        if (index % 2 === 1) return part;
+        return [...part].map(char => map[char] || char).join("");
+      }).join("");
+    }
+    document.querySelector("#convert").addEventListener("click", () => {
+      output.value = convertText(source.value);
+      status.textContent = source.value ? "轉換完成。" : "先貼上要轉換的文字。";
+      updateCounts();
+    });
+    source.addEventListener("input", () => {
+      status.textContent = "";
+      updateCounts();
+    });
+    document.querySelector("#copy").addEventListener("click", async () => {
+      if (!output.value) { status.textContent = "目前沒有可複製的結果。"; return; }
+      try {
+        await navigator.clipboard.writeText(output.value);
+        status.textContent = "已複製結果。";
+      } catch {
+        output.focus(); output.select();
+        status.textContent = "瀏覽器未授權自動複製，已選取結果，請手動複製。";
+      }
+    });
+    document.querySelector("#clear").addEventListener("click", () => {
+      source.value = ""; output.value = ""; status.textContent = ""; updateCounts(); source.focus();
+    });
+  </script>
+</body>
+</html>
