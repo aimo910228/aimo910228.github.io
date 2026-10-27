@@ -30,6 +30,7 @@
 @media(max-width:360px){.container{width:calc(100% - 36px)}.site-name{font-size:18px;gap:9px}.site-symbol{height:28px;width:28px}.topbar-contact{gap:9px}.hero-name{font-size:39px}.hero-role{font-size:20px}.hero-description{font-size:18px}.quick-item{grid-template-columns:94px minmax(0,1fr);gap:14px;padding:17px 20px}.nav-inner{column-gap:19px}.section-heading{gap:11px}h2{font-size:28px}.section-number{height:33px;width:33px}.about-card{padding:23px 20px}.about-fields>div{grid-template-columns:94px minmax(0,1fr);gap:12px}.entry-card{padding:22px 17px}.entry-card h3{font-size:24px}.entry-tags span{padding-inline:8px}.specialty-item{padding-inline:18px}.specialty-item h3{font-size:24px}.contact-card{padding-inline:21px}.contact-card h3{font-size:26px}.footer-inner{gap:15px}.footer-name{font-size:18px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 @media print{.section-nav{position:static;backdrop-filter:none}.section{padding-block:30px}.hero-cover,.contact-card{-webkit-print-color-adjust:exact;print-color-adjust:exact}.quick-info{box-shadow:none}.tab-list,.footer-top,.sample-note{display:none}.tab-panel[hidden]{display:block!important}.timeline-entry,.entry-card,.participation-entry{break-inside:avoid}}
+@media(max-width:600px){.nav-inner{column-gap:10px;row-gap:0}.section-nav a{flex:0 0 calc((100% - 20px) / 3);text-align:center}}
 </style>
 </head>
 <body id="top">
@@ -43,7 +44,7 @@
   <p class="hero-description">一句簡短的個人介紹預留區</p><span class="hero-rule" aria-hidden="true"></span>
 </div></section>
 <dl class="container quick-info" aria-label="個人資訊預留區"><div class="quick-item"><dt>目前身分</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div><div class="quick-item"><dt>主要領域</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div><div class="quick-item"><dt>最近關注</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div></dl>
-<nav class="section-nav" aria-label="內容導覽"><div class="container nav-inner"><a href="#about" aria-current="location">關於我</a><a href="#experience">學經歷</a><a href="#specialties">專長與關注</a><a href="#participation">參與紀錄</a><a href="#contact">聯絡資訊</a></div></nav>
+<nav class="section-nav" aria-label="內容導覽"><div class="container nav-inner"><a href="#about" aria-current="location">關於我</a><a href="#experience">學經歷</a><a href="#specialties">專長</a><a href="#participation">參與紀錄</a><a href="#contact">聯絡資訊</a></div></nav>
 
 <section id="about" class="section container" aria-labelledby="about-title">
   <div class="section-heading"><span class="section-number" aria-hidden="true">一</span><h2 id="about-title">關於我</h2></div>
@@ -95,7 +96,13 @@ function activateTab(tab,focus=false){tabs.forEach(item=>{const selected=item===
 tabs.forEach((tab,index)=>{tab.addEventListener("click",()=>activateTab(tab));tab.addEventListener("keydown",event=>{let next=index;if(event.key==="ArrowRight")next=(index+1)%tabs.length;else if(event.key==="ArrowLeft")next=(index-1+tabs.length)%tabs.length;else if(event.key==="Home")next=0;else if(event.key==="End")next=tabs.length-1;else return;event.preventDefault();activateTab(tabs[next],true);});});
 const navigationLinks=[...document.querySelectorAll('.section-nav a')];
 const observedSections=navigationLinks.map(link=>document.querySelector(link.getAttribute("href"))).filter(Boolean);
-if("IntersectionObserver" in window){const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);if(!visible.length)return;const target="#"+visible[0].target.id;navigationLinks.forEach(link=>{if(link.getAttribute("href")===target)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");});},{rootMargin:"-100px 0px -55% 0px",threshold:[0,.1,.3,.6]});observedSections.forEach(section=>observer.observe(section));}
+let navigationFramePending=false;
+function markCurrentSection(target){navigationLinks.forEach(link=>{if(link.getAttribute("href")===target)link.setAttribute("aria-current","location");else link.removeAttribute("aria-current");});}
+function queueNavigationUpdate(){if(navigationFramePending)return;navigationFramePending=true;requestAnimationFrame(()=>{navigationFramePending=false;const boundary=document.querySelector('.section-nav').getBoundingClientRect().height+70;let current=observedSections[0];for(const section of observedSections){if(section.getBoundingClientRect().top<=boundary)current=section;else break;}if(current)markCurrentSection("#"+current.id);});}
+navigationLinks.forEach(link=>link.addEventListener("click",()=>markCurrentSection(link.getAttribute("href"))));
+window.addEventListener("scroll",queueNavigationUpdate,{passive:true});
+window.addEventListener("resize",queueNavigationUpdate);
+queueNavigationUpdate();
 </script>
 </body>
 </html>
