@@ -105,16 +105,15 @@ h2,.experience-group-title{font-family:var(--serif);font-weight:600;letter-spaci
 .about-layout,.entry-content,.specialty-item,.contact-layout,.quick-info{box-shadow:none}
 @media(max-width:600px){.hero-name{letter-spacing:.04em}}
 
-/* Images introduce the person and their areas of focus. */
-.about-visuals{margin-top:44px;padding-top:34px;border-top:1px solid var(--line)}
-.about-visual{margin:0}
-.about-visual+.about-visual{margin-top:40px;padding-top:34px;border-top:1px solid var(--line)}
-.about-visual figcaption{margin-bottom:24px}
-.about-visual h3{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.6;letter-spacing:.04em;color:var(--heading)}
-.about-visual p{margin:9px 0 0;font-size:18px;line-height:1.8;color:var(--muted)}
-.about-visual picture{display:block}
-.about-visual img{display:block;width:100%;height:auto;border:0;border-radius:0;background:var(--light)}
-@media(max-width:600px){.about-visuals{margin-top:34px;padding-top:28px}.about-visual+.about-visual{margin-top:32px;padding-top:28px}.about-visual figcaption{margin-bottom:20px}.about-visual h3{font-size:25px}.about-visual p{font-size:18px}}
+/* Plain photographs below the personal introduction. */
+.about-images{margin-top:38px}
+.about-image-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,1fr);gap:24px 28px}
+.about-image{position:relative;min-width:0;margin:0;aspect-ratio:16 / 10;overflow:hidden;background:var(--light)}
+.about-image--main{grid-row:1 / span 2;aspect-ratio:auto}
+.about-image img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;border:0;border-radius:0}
+.about-image--main img{object-position:50% 38%}
+@media(max-width:800px){.about-image-grid{grid-template-rows:auto;gap:22px}.about-image--main{grid-column:1 / -1;grid-row:auto;aspect-ratio:4 / 3}.about-image{aspect-ratio:4 / 3}}
+@media(max-width:600px){.about-images{margin-top:30px}.about-image-grid{gap:16px}.about-image--main{aspect-ratio:4 / 5}}
 </style>
 </head>
 <body id="top">
@@ -134,15 +133,13 @@ h2,.experience-group-title{font-family:var(--serif);font-weight:600;letter-spaci
   <div class="section-heading"><span class="section-number" aria-hidden="true">一</span><h2 id="about-title">關於我</h2></div>
   <div class="about-layout"><div class="about-summary"><h3>一段關於自己的介紹</h3><div aria-label="個人背景與觀點預留區"><span class="placeholder-line full" aria-hidden="true"></span><span class="placeholder-line full" aria-hidden="true"></span><span class="placeholder-line medium" aria-hidden="true"></span></div><span class="slot-note">個人背景、做事方式與關注的事物預留區</span></div><dl class="about-fields"><div><dt>目前身分</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div><div><dt>關注領域</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div><div><dt>興趣關鍵字</dt><dd aria-label="待填寫"><span class="placeholder-line" aria-hidden="true"></span></dd></div></dl></div>
 
-  <div class="about-visuals" id="about-gallery" role="group" aria-label="個人介紹圖片示範">
-    <figure class="about-visual">
-      <figcaption><h3>個人背景</h3><p>現職與身分、學習背景、專長與經歷的介紹圖片預留區</p></figcaption>
-      <picture><source media="(max-width:600px)" srcset="images/profile-overview-mobile.svg" width="400" height="560"><source media="(max-width:800px)" srcset="images/profile-overview-tablet.svg" width="800" height="460"><img src="images/profile-overview.svg" alt="個人背景介紹圖範例：現職與身分、學習背景、專長領域與經歷重點，資料留白" width="1160" height="460" loading="lazy" decoding="async"></picture>
-    </figure>
-    <figure class="about-visual">
-      <figcaption><h3>專長與關注</h3><p>領域名稱與簡短說明的圖片預留區</p></figcaption>
-      <picture><source media="(max-width:600px)" srcset="images/profile-fields-mobile.svg" width="400" height="660"><source media="(max-width:800px)" srcset="images/profile-fields-tablet.svg" width="800" height="420"><img src="images/profile-fields.svg" alt="專長與關注領域說明圖範例：三個領域的名稱與說明均留白" width="1160" height="420" loading="lazy" decoding="async"></picture>
-    </figure>
+  <div class="about-images" id="about-gallery" role="group" aria-label="人物與參與照片的排版示範">
+    <!-- Layout sample photos: Melbin Jacob (isOnKqJkKAI), AMONWAT DUMKRUT (u6RJY5F3yM8), Vitaly Gariev (i4BPnD5nrPc). Unsplash License. -->
+    <div class="about-image-grid">
+      <figure class="about-image about-image--main"><img src="https://images.unsplash.com/photo-1700676195099-75103510df39?fit=max&amp;fm=webp&amp;q=80&amp;w=1400" srcset="https://images.unsplash.com/photo-1700676195099-75103510df39?fit=max&amp;fm=webp&amp;q=80&amp;w=700 700w, https://images.unsplash.com/photo-1700676195099-75103510df39?fit=max&amp;fm=webp&amp;q=80&amp;w=1400 1400w" sizes="(max-width:800px) 90vw, 45vw" alt="人物照片的版面示範" width="1400" height="1800" loading="lazy" decoding="async"></figure>
+      <figure class="about-image"><img src="https://images.unsplash.com/photo-1772419216340-fd8abb4f55de?fit=max&amp;fm=webp&amp;q=80&amp;w=1200" srcset="https://images.unsplash.com/photo-1772419216340-fd8abb4f55de?fit=max&amp;fm=webp&amp;q=80&amp;w=600 600w, https://images.unsplash.com/photo-1772419216340-fd8abb4f55de?fit=max&amp;fm=webp&amp;q=80&amp;w=1200 1200w" sizes="(max-width:800px) 45vw, 45vw" alt="活動分享照片的版面示範" width="1200" height="750" loading="lazy" decoding="async"></figure>
+      <figure class="about-image"><img src="https://images.unsplash.com/photo-1758873271321-4d6b3526ef42?fit=max&amp;fm=webp&amp;q=80&amp;w=1200" srcset="https://images.unsplash.com/photo-1758873271321-4d6b3526ef42?fit=max&amp;fm=webp&amp;q=80&amp;w=600 600w, https://images.unsplash.com/photo-1758873271321-4d6b3526ef42?fit=max&amp;fm=webp&amp;q=80&amp;w=1200 1200w" sizes="(max-width:800px) 45vw, 45vw" alt="團隊討論照片的版面示範" width="1200" height="750" loading="lazy" decoding="async"></figure>
+    </div>
   </div>
 </section>
 
